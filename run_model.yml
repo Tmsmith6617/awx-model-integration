@@ -1,0 +1,33 @@
+---
+- name: Run AI classification model
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Ensure input directory exists
+      file:
+        path: /tmp/model_input
+        state: directory
+
+    - name: Ensure output directory exists
+      file:
+        path: /tmp/model_output
+        state: directory
+
+    - name: Copy input CSV to host
+      copy:
+        src: files/input.csv
+        dest: /tmp/model_input/input.csv
+
+    - name: Run Python prediction script
+      command: >
+        python3 scripts/predict.py
+        /tmp/model_input/input.csv
+        /tmp/model_output/output.csv
+      environment:
+        PYTHONUNBUFFERED: 1
+
+    - name: Fetch prediction results
+      fetch:
+        src: /tmp/model_output/output.csv
+        dest: ./results/output.csv
+        flat: yes
