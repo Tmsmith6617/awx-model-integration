@@ -13,6 +13,7 @@
         chdir: "{{ playbook_dir }}/.."   # This sets the current working directory to the project root
       environment:
         PYTHONUNBUFFERED: 1
+        PYTHONWARNINGS: "ignore"
 
     - name: Fetch prediction results
       fetch:
