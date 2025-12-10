@@ -1,0 +1,12 @@
+---
+- name: Check Execution Environment packages
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Show installed Python packages
+      command: pip list
+      register: pip_output
+
+    - name: Print pip output
+      debug:
+        var: pip_output.stdout_lines
