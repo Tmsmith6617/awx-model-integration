@@ -1,13 +1,19 @@
-- name: Show Python version
-  command: python3 --version
-  register: py_ver
+---
+- name: Check Execution Environment Python and packages
+  hosts: localhost
+  gather_facts: false
+  tasks:
 
-- debug:
-    var: py_ver.stdout
+    - name: Show Python version
+      command: python3 --version
+      register: py_ver
 
-- name: Check installed pip packages
-  command: python3 -m pip list
-  register: pip_output
+    - debug:
+        var: py_ver.stdout
 
-- debug:
-    var: pip_output.stdout_lines
+    - name: Check installed pip packages
+      command: python3 -m pip list
+      register: pip_output
+
+    - debug:
+        var: pip_output.stdout_lines
