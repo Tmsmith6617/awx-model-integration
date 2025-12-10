@@ -2,32 +2,31 @@
 - name: Run AI classification model
   hosts: localhost
   gather_facts: false
+
+  vars:
+    input_file: /runner/project/files/input.csv
+    output_file: /runner/project/files/output.csv
+    script_path: /runner/project/scripts/predict.py
+
   tasks:
-    - name: Ensure input directory exists
-      file:
-        path: /tmp/model_input
-        state: directory
 
     - name: Ensure output directory exists
       file:
-        path: /tmp/model_output
+        path: "{{ output_file | dirname }}"
         state: directory
-
-    - name: Copy input CSV to host
-      copy:
-        src: files/input.csv
-        dest: /tmp/model_input/input.csv
 
     - name: Run Python prediction script
       command: >
-        python3 scripts/predict.py
-        /tmp/model_input/input.csv
-        /tmp/model_output/output.csv
+        python3 {{ script_path }}
+        {{ input_file }}
+        {{ output_file }}
       environment:
         PYTHONUNBUFFERED: 1
 
-    - name: Fetch prediction results
-      fetch:
-        src: /tmp/model_output/output.csv
-        dest: ./results/output.csv
-        flat: yes
+    - name: Show output CSV
+      command: cat "{{ output_file }}"
+      register: result
+
+    - name: Print prediction results
+      debug:
+        msg: "{{ result.stdout_lines }}"
