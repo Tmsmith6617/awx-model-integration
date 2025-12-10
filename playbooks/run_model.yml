@@ -6,14 +6,16 @@
 
     - name: Run Python prediction script
       command: >
-        python3 scripts/predict.py
-        files/input.csv
-        files/output.csv
+        python3 ../scripts/predict.py
+        ../files/input.csv
+        ../files/output.csv
+      args:
+        chdir: "{{ playbook_dir }}"
       environment:
         PYTHONUNBUFFERED: 1
 
     - name: Fetch prediction results
       fetch:
-        src: files/output.csv
+        src: ../files/output.csv
         dest: ./results/output.csv
         flat: yes
