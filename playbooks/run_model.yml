@@ -4,19 +4,15 @@
   gather_facts: false
   tasks:
 
-    - name: Run Python prediction script
+    - name: Run Python prediction script and capture output
       command: >
-        python3 scripts/predict.py
-        files/input.csv
-        files/output.csv
+        python3 scripts/predict.py files/input.csv
       args:
-        chdir: "{{ playbook_dir }}/.."   # This sets the current working directory to the project root
+        chdir: "{{ playbook_dir }}/.."
+      register: ai_result
       environment:
         PYTHONUNBUFFERED: 1
-        PYTHONWARNINGS: "ignore"
 
-    - name: Fetch prediction results
-      fetch:
-        src: files/output.csv
-        dest: ./results/output.csv
-        flat: yes
+    - name: Show AI prediction result in AWX
+      debug:
+        var: ai_result.stdout_lines
