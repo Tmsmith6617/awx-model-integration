@@ -4,7 +4,7 @@
   gather_facts: false
   tasks:
 
-    - name: Run Python prediction script and capture output
+    - name: Python prediction script
       command: >
         python3 scripts/predict.py files/input.csv
       args:
@@ -13,6 +13,6 @@
       environment:
         PYTHONUNBUFFERED: 1
 
-    - name: Show AI prediction result in AWX
+    - name: AI prediction result
       debug:
         var: ai_result.stdout_lines
